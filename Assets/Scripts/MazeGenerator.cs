@@ -18,20 +18,20 @@ public class MazeGenerator : MonoBehaviour
         int mazeSideLength = 15;
         Rigidbody floor = Instantiate(floorPrefab);
         walls = new List<Rigidbody>();
-        floor.transform.localScale = new Vector3((float)(mazeSideLength + 1), 1.0f, (float)(mazeSideLength + 1));
-        floor.transform.position = new Vector3((float)(mazeSideLength + 1) / 2f, 0.0f, (float)(mazeSideLength + 1) / 2f);
+        floor.transform.localScale = new Vector3((float)mazeSideLength, 1.0f, (float)mazeSideLength);
+        floor.transform.position = new Vector3((float)mazeSideLength / 2f, 0.0f, (float)mazeSideLength / 2f);
         int[][] enclosingSection = new int[][]{
             new int[] {0, 0},
-            new int[] {mazeSideLength, 0},
-            new int[] {mazeSideLength, mazeSideLength},
-            new int[] {0, mazeSideLength},
+            new int[] {mazeSideLength - 1, 0},
+            new int[] {mazeSideLength - 1, mazeSideLength - 1},
+            new int[] {0, mazeSideLength - 1},
         };
         int[][][] dividedSections;
         int[][] openings;
         (dividedSections, openings) = divideSectionRecursive(enclosingSection);
         List<int[]> openingsList = new List<int[]>(openings);
         openingsList.Add(new int[]{1, 0});
-        openingsList.Add(new int[]{mazeSideLength - 1, mazeSideLength});
+        openingsList.Add(new int[]{mazeSideLength - 2, mazeSideLength - 1});
         buildMaze(enclosingSection, dividedSections, openingsList);
     }
 
