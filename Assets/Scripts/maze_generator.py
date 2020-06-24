@@ -1,4 +1,5 @@
 import random
+import sys
 import typing as t
 
 Point = t.Tuple[int, int]
@@ -18,10 +19,10 @@ All sections are assumed to be in the following format:
 
 def get_bounds(section: Section):
     return {
-        "left": min(point[0] for point in section),
-        "right": max(point[0] for point in section),
-        "lower": min(point[1] for point in section),
-        "upper": max(point[1] for point in section),
+        "left": section[0][0],
+        "right": section[1][0],
+        "lower": section[0][1],
+        "upper": section[2][1],
     }
 
 
@@ -47,56 +48,53 @@ def random_odd_number_between_evens(low: int, high: int):
 def divide_section(section: Section) -> t.Tuple[
         t.Sequence[Section],
         t.Sequence[Point]]:
-    left_bound = min(point[0] for point in section)
-    right_bound = max(point[0] for point in section)
-    lower_bound = min(point[1] for point in section)
-    upper_bound = max(point[1] for point in section)
+    bounds = get_bounds(section)
     vertical_split = random_even_number_between_evens(
-        left_bound, right_bound)
+        bounds["left"], bounds["right"])
     horizontal_split = random_even_number_between_evens(
-        lower_bound, upper_bound)
+        bounds["lower"], bounds["upper"])
     new_sections = [
         [
-            (left_bound, lower_bound),
-            (vertical_split, lower_bound),
+            (bounds["left"], bounds["lower"]),
+            (vertical_split, bounds["lower"]),
             (vertical_split, horizontal_split),
-            (left_bound, horizontal_split)
+            (bounds["left"], horizontal_split)
         ],
         [
-            (vertical_split, lower_bound),
-            (right_bound, lower_bound),
-            (right_bound, horizontal_split),
+            (vertical_split, bounds["lower"]),
+            (bounds["right"], bounds["lower"]),
+            (bounds["right"], horizontal_split),
             (vertical_split, horizontal_split)
         ],
         [
-            (left_bound, horizontal_split),
+            (bounds["left"], horizontal_split),
             (vertical_split, horizontal_split),
-            (vertical_split, upper_bound),
-            (left_bound, upper_bound)
+            (vertical_split, bounds["upper"]),
+            (bounds["left"], bounds["upper"])
         ],
         [
             (vertical_split, horizontal_split),
-            (right_bound, horizontal_split),
-            (right_bound, upper_bound),
-            (vertical_split, upper_bound)
+            (bounds["right"], horizontal_split),
+            (bounds["right"], bounds["upper"]),
+            (vertical_split, bounds["upper"])
         ]
     ]
     possible_openings = [
         (
-            random_odd_number_between_evens(left_bound, vertical_split),
+            random_odd_number_between_evens(bounds["left"], vertical_split),
             horizontal_split
         ),
         (
-            random_odd_number_between_evens(vertical_split, right_bound),
+            random_odd_number_between_evens(vertical_split, bounds["right"]),
             horizontal_split
         ),
         (
             vertical_split,
-            random_odd_number_between_evens(lower_bound, horizontal_split)
+            random_odd_number_between_evens(bounds["lower"], horizontal_split)
         ),
         (
             vertical_split,
-            random_odd_number_between_evens(horizontal_split, upper_bound)
+            random_odd_number_between_evens(horizontal_split, bounds["upper"])
         ),
     ]
     deselected_index = random.randint(0, 3)
@@ -130,10 +128,10 @@ def divide_sections(sections: t.Sequence[Section]) -> t.Tuple[
     return divided, openings
 
 
-def divide_sections_recursive(sections: t.Sequence[Section]) -> t.Tuple[
+def divide_section_recursive(section: Section) -> t.Tuple[
         t.Sequence[Section],
         t.Sequence[Point]]:
-    divided = [section for section in sections]
+    divided = [section]
     openings = []
     while any(can_subdivide_section(section) for section in divided):
         divided, new_openings = divide_sections(divided)
@@ -186,10 +184,9 @@ def print_maze(
 
 
 if __name__ == "__main__":
-    size = 40
+    size = int(sys.argv[1])
     enclosing_section = ((0, 0), (size, 0), (size, size), (0, size))
-    sections = [enclosing_section]
-    divided_sections, openings = divide_sections_recursive(sections)
+    divided_sections, openings = divide_section_recursive(enclosing_section)
     start = (1, 0)
     end = (size - 1, size)
     all_openings = [start, end, *openings]
