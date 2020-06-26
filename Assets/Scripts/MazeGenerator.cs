@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
-    public Rigidbody floorPrefab;
-    public Rigidbody wallPrefab;
-    public List<Rigidbody> walls;
+    public Transform floorPrefab;
+    public Transform wallPrefab;
+    public Rigidbody playerPrefab;
+    public List<Transform> walls;
     public float wallHeight = 2.0f;
     private System.Random rnd = new System.Random();
 
@@ -15,11 +16,51 @@ public class MazeGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int mazeSideLength = 15;
-        Rigidbody floor = Instantiate(floorPrefab);
-        walls = new List<Rigidbody>();
-        floor.transform.localScale = new Vector3((float)mazeSideLength, 1.0f, (float)mazeSideLength);
-        floor.transform.position = new Vector3((float)mazeSideLength / 2f, 0.0f, (float)mazeSideLength / 2f);
+        int mazeSideLength = 25;
+        createFloor((float)mazeSideLength);
+        createWalls(mazeSideLength);
+        createPlayer();
+        createPlatforms(mazeSideLength);
+    }
+
+    void createPlayer() {
+        Vector3 playerPos = getPositionFromCoords(new int[]{1, -1});
+        Rigidbody player = Instantiate(playerPrefab, playerPos, Quaternion.identity);
+    }
+
+    void createPlatforms(int mazeSideLength) {
+        Vector3 startPlatformPositionXZ = getPositionFromFloatCoords(new float[]{1.0f, -2.0f});
+        Vector3 startPlatformPosition = new Vector3(startPlatformPositionXZ.x, 0.0f, startPlatformPositionXZ.z);
+        Transform startPlatform = Instantiate(floorPrefab, startPlatformPosition, Quaternion.identity);
+        startPlatform.transform.localScale = new Vector3(3.0f, 1.0f, 3.0f);
+
+        // TODO: refactor this and reuse for end platform
+        Transform wall1 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{-1.0f, -2.0f}), Quaternion.identity);
+        wall1.transform.localScale = new Vector3(1.0f, 1.0f, 5.0f);
+        walls.Add(wall1);
+        Transform wall2 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{1.5f, -4.0f}), Quaternion.identity);
+        wall2.transform.localScale = new Vector3(4.0f, 1.0f, 1.0f);
+        walls.Add(wall2);
+        Transform wall3 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{3.0f, -2.0f}), Quaternion.identity);
+        wall3.transform.localScale = new Vector3(1.0f, 1.0f, 3.0f);
+        walls.Add(wall3);
+
+        Vector3 targetPlatformPositionXZ = getPositionFromFloatCoords(new float[]{
+            (float)mazeSideLength - 2.0f,
+            (float)mazeSideLength + 1.0f});
+        Vector3 targetPlatformPosition = new Vector3(targetPlatformPositionXZ.x, 0.0f, targetPlatformPositionXZ.z);
+        Transform targetPlatform = Instantiate(floorPrefab, targetPlatformPosition, Quaternion.identity);
+        targetPlatform.transform.localScale = new Vector3(3.0f, 1.0f, 3.0f);
+    }
+
+    void createFloor(float mazeSideLength) {
+        Vector3 floorPos = new Vector3(mazeSideLength / 2f, 0.0f, mazeSideLength / 2f);
+        Transform floor = Instantiate(floorPrefab, floorPos, Quaternion.identity);
+        floor.transform.localScale = new Vector3(mazeSideLength, 1.0f, mazeSideLength);
+    }
+
+    void createWalls(int mazeSideLength) {
+        walls = new List<Transform>();
         int[][] enclosingSection = new int[][]{
             new int[] {0, 0},
             new int[] {mazeSideLength - 1, 0},
@@ -66,17 +107,23 @@ public class MazeGenerator : MonoBehaviour
     }
 
     Vector3 getPositionFromCoords(int[] location) {
+        return getPositionFromFloatCoords(new float[] {
+            (float)location[0],
+            (float)location[1]
+        });
+    }
+
+    Vector3 getPositionFromFloatCoords(float[] location) {
         return new Vector3(
-            (float)location[0] + 0.5f,
+            location[0] + 0.5f,
             wallHeight,
-            (float)location[1] + 0.5f
+            location[1] + 0.5f
         );
     }
 
     void buildWall(int[] location) {
         Vector3 pos = getPositionFromCoords(location);
-        Rigidbody wall = Instantiate(wallPrefab);
-        wall.transform.position = pos;
+        Transform wall = Instantiate(wallPrefab, pos, Quaternion.identity);
         wall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
         walls.Add(wall);
     }
