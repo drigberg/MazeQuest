@@ -17,7 +17,7 @@ public class MazeGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int mazeSideLength = 25;
+        int mazeSideLength = 7;
         createFloor((float)mazeSideLength);
         createWalls(mazeSideLength);
         createPlayer();
