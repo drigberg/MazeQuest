@@ -3,6 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+/**
+REMAINING: 21 points
+    - Walls at exit (S)
+    - Different color for entrance and exit platforms (S)
+    - Detect success when reaching exit, display "SUCCESS!" (M)
+    - Start level with aerial view (S)
+        - clearly label start and exit (M)
+        - allow player to click "Go" when ready, switch to player view (S)
+    - When level ends, reset to next level with larger maze (M)
+    - Time each level at (side_length ** 2) / 10 seconds (S)
+    - Display countdown (M)
+    - If timer runs out, player loses, and has the option to restart (M)
+        - final level is displayed with total time from all levels (S)
+
+
+DONE: 20 points
+    - Maze generation logic (L)
+    - Maze building (L)
+    - Player controls (M)
+    - Camera behavior (M)
+    - Entrance and exit platforms (S)
+    - Allow smooth movement on floor and against walls (M)
+ */
 public class MazeGenerator : MonoBehaviour
 {
     public Transform floorPrefab;
