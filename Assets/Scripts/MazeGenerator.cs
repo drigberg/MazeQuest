@@ -8,6 +8,7 @@ public class MazeGenerator : MonoBehaviour
     public Transform floorPrefab;
     public Transform wallPrefab;
     public Rigidbody playerPrefab;
+    public CameraController mainCamera;
     public List<Transform> walls;
     public float wallHeight = 2.0f;
     private System.Random rnd = new System.Random();
@@ -26,6 +27,7 @@ public class MazeGenerator : MonoBehaviour
     void createPlayer() {
         Vector3 playerPos = getPositionFromCoords(new int[]{1, -1});
         Rigidbody player = Instantiate(playerPrefab, playerPos, Quaternion.identity);
+        mainCamera.player = player;
     }
 
     void createPlatforms(int mazeSideLength) {
@@ -36,13 +38,13 @@ public class MazeGenerator : MonoBehaviour
 
         // TODO: refactor this and reuse for end platform
         Transform wall1 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{-1.0f, -2.0f}), Quaternion.identity);
-        wall1.transform.localScale = new Vector3(1.0f, 1.0f, 5.0f);
+        wall1.transform.localScale = new Vector3(1.0f, 3.0f, 5.0f);
         walls.Add(wall1);
         Transform wall2 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{1.5f, -4.0f}), Quaternion.identity);
-        wall2.transform.localScale = new Vector3(4.0f, 1.0f, 1.0f);
+        wall2.transform.localScale = new Vector3(4.0f, 3.0f, 1.0f);
         walls.Add(wall2);
         Transform wall3 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{3.0f, -2.0f}), Quaternion.identity);
-        wall3.transform.localScale = new Vector3(1.0f, 1.0f, 3.0f);
+        wall3.transform.localScale = new Vector3(1.0f, 3.0f, 3.0f);
         walls.Add(wall3);
 
         Vector3 targetPlatformPositionXZ = getPositionFromFloatCoords(new float[]{

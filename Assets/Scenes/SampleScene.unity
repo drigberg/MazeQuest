@@ -450,14 +450,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6feb9548e98d54224a2b2334834c7509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 7573985105288324344, guid: 7606a87ec3e1f4b8690ea898b32e92c4,
+  floorPrefab: {fileID: 5300172724544411903, guid: 7606a87ec3e1f4b8690ea898b32e92c4,
     type: 3}
-  wallPrefab: {fileID: 2599955167674188455, guid: cd0f496ac8af144acb2675a47b270f45,
+  wallPrefab: {fileID: 3153452655558540222, guid: cd0f496ac8af144acb2675a47b270f45,
+    type: 3}
+  playerPrefab: {fileID: 5984806423802851820, guid: 079fa618abdbd4fcc9976b6e8f9cff31,
     type: 3}
   walls: []
-  entrance: {x: 0, y: 0, z: 0}
-  exit: {x: 0, y: 0, z: 0}
-  mazeSideLength: 0
   wallHeight: 2
 --- !u!4 &1664801001
 Transform:
