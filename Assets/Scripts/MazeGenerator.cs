@@ -4,43 +4,79 @@ using UnityEngine;
 
 
 /**
-REMAINING: 21 points
-    - Walls at exit (S)
-    - Different color for entrance and exit platforms (S)
-    - Detect success when reaching exit, display "SUCCESS!" (M)
+REMAINING: 13 points
     - Start level with aerial view (S)
-        - clearly label start and exit (M)
-        - allow player to click "Go" when ready, switch to player view (S)
-    - When level ends, reset to next level with larger maze (M)
+    - Aerial view: clearly label start and exit (M)
+    - Aerial view: allow player to click "Go" when ready, switch to player view (S)
     - Time each level at (side_length ** 2) / 10 seconds (S)
-    - Display countdown (M)
+    - Display time remaining (M)
     - If timer runs out, player loses, and has the option to restart (M)
-        - final level is displayed with total time from all levels (S)
+    - Game over: final level is displayed with total time from all levels (S)
+    - Revise lighting (S)
 
-
-DONE: 20 points
+DONE: 28 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
     - Camera behavior (M)
     - Entrance and exit platforms (S)
     - Allow smooth movement on floor and against walls (M)
+    - Walls at exit (S)
+    - Different color for entrance and exit platforms (S)
+    - Detect success when reaching exit, display "SUCCESS!" (M)
+    - When level ends, wait 3 seconds and then reset to next level with larger maze (M)
  */
+
 public class MazeGenerator : MonoBehaviour
 {
     public Transform floorPrefab;
     public Transform wallPrefab;
+    public Transform startWallPrefab;
+    public Transform targetWallPrefab;
+    public Transform targetDetectorPrefab;
+    public Canvas canvas;
     public Rigidbody playerPrefab;
     public CameraController mainCamera;
     public List<Transform> walls;
     public float wallHeight = 2.0f;
     private System.Random rnd = new System.Random();
+    private float nextLevelTimer = 0.0f;
+    private int level = 1;
+    public List<GameObject> createdObjects;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        int mazeSideLength = 7;
+        createdObjects = new List<GameObject>();
+        Reset();
+    }
+
+    void IterateNextLevelTimer() {
+        nextLevelTimer -= Time.deltaTime;
+    }
+
+    void Update() {
+        if (nextLevelTimer > 0.0f) {
+            IterateNextLevelTimer();
+            if (nextLevelTimer <= 0.0f) {
+                level += 1;
+                Reset();
+            }
+        }
+    }
+
+    void destroyObjects() {
+        for (int i = 0; i < createdObjects.Count; i++) {
+            Destroy(createdObjects[i]);
+        }
+        createdObjects = new List<GameObject>();
+    }
+
+    void Reset() {
+        destroyObjects();
+        int mazeSideLength = 3 + level * 4;
+        canvas.enabled = false;
         createFloor((float)mazeSideLength);
         createWalls(mazeSideLength);
         createPlayer();
@@ -51,36 +87,77 @@ public class MazeGenerator : MonoBehaviour
         Vector3 playerPos = getPositionFromCoords(new int[]{1, -1});
         Rigidbody player = Instantiate(playerPrefab, playerPos, Quaternion.identity);
         mainCamera.player = player;
+        createdObjects.Add(player.gameObject);
     }
 
     void createPlatforms(int mazeSideLength) {
+        createStartPlatform(mazeSideLength);
+        createTargetPlatform(mazeSideLength);
+    }
+
+    public void OnSuccess() {
+        canvas.enabled = true;
+        nextLevelTimer = 3.0f;
+    }
+
+    void createStartPlatform(int mazeSideLength) {
+        // Start platform
         Vector3 startPlatformPositionXZ = getPositionFromFloatCoords(new float[]{1.0f, -2.0f});
         Vector3 startPlatformPosition = new Vector3(startPlatformPositionXZ.x, 0.0f, startPlatformPositionXZ.z);
         Transform startPlatform = Instantiate(floorPrefab, startPlatformPosition, Quaternion.identity);
         startPlatform.transform.localScale = new Vector3(3.0f, 1.0f, 3.0f);
+        createdObjects.Add(startPlatform.gameObject);
 
-        // TODO: refactor this and reuse for end platform
-        Transform wall1 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{-1.0f, -2.0f}), Quaternion.identity);
+        // TODO: refactor this and reuse
+        Transform wall1 = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{-1.0f, -2.0f}), Quaternion.identity);
         wall1.transform.localScale = new Vector3(1.0f, 3.0f, 5.0f);
         walls.Add(wall1);
-        Transform wall2 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{1.5f, -4.0f}), Quaternion.identity);
+        Transform wall2 = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{1.5f, -4.0f}), Quaternion.identity);
         wall2.transform.localScale = new Vector3(4.0f, 3.0f, 1.0f);
         walls.Add(wall2);
-        Transform wall3 = Instantiate(wallPrefab, getPositionFromFloatCoords(new float[]{3.0f, -2.0f}), Quaternion.identity);
+        Transform wall3 = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{3.0f, -2.0f}), Quaternion.identity);
         wall3.transform.localScale = new Vector3(1.0f, 3.0f, 3.0f);
         walls.Add(wall3);
+        createdObjects.Add(wall1.gameObject);
+        createdObjects.Add(wall2.gameObject);
+        createdObjects.Add(wall3.gameObject);
+    }
 
+    void createTargetPlatform(int mazeSideLength) {
         Vector3 targetPlatformPositionXZ = getPositionFromFloatCoords(new float[]{
             (float)mazeSideLength - 2.0f,
             (float)mazeSideLength + 1.0f});
         Vector3 targetPlatformPosition = new Vector3(targetPlatformPositionXZ.x, 0.0f, targetPlatformPositionXZ.z);
         Transform targetPlatform = Instantiate(floorPrefab, targetPlatformPosition, Quaternion.identity);
         targetPlatform.transform.localScale = new Vector3(3.0f, 1.0f, 3.0f);
+        createdObjects.Add(targetPlatform.gameObject);
+
+        Vector3 targetDetectorPosition = new Vector3(targetPlatformPositionXZ.x, 1.5f, targetPlatformPositionXZ.z);
+        Transform targetDetector = Instantiate(targetDetectorPrefab, targetDetectorPosition, Quaternion.identity);
+        TargetDetectorController tdController = targetDetector.GetComponent<TargetDetectorController>();
+        tdController.parent = GetComponent<MazeGenerator>();
+        createdObjects.Add(targetDetector.gameObject);
+
+        // TODO: refactor this and reuse
+        float mazeEnd = (float)mazeSideLength - 1.0f;
+        Transform wall1 = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd + 1.0f, mazeEnd + 2.0f}), Quaternion.identity);
+        wall1.transform.localScale = new Vector3(1.0f, 3.0f, 5.0f);
+        walls.Add(wall1);
+        Transform wall2 = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd - 1.5f, mazeEnd + 4.0f}), Quaternion.identity);
+        wall2.transform.localScale = new Vector3(4.0f, 3.0f, 1.0f);
+        walls.Add(wall2);
+        Transform wall3 = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd - 3.0f, mazeEnd + 2.0f}), Quaternion.identity);
+        wall3.transform.localScale = new Vector3(1.0f, 3.0f, 3.0f);
+        walls.Add(wall3);
+        createdObjects.Add(wall1.gameObject);
+        createdObjects.Add(wall2.gameObject);
+        createdObjects.Add(wall3.gameObject);
     }
 
     void createFloor(float mazeSideLength) {
         Vector3 floorPos = new Vector3(mazeSideLength / 2f, 0.0f, mazeSideLength / 2f);
         Transform floor = Instantiate(floorPrefab, floorPos, Quaternion.identity);
+        createdObjects.Add(floor.gameObject);
         floor.transform.localScale = new Vector3(mazeSideLength, 1.0f, mazeSideLength);
     }
 
@@ -151,6 +228,7 @@ public class MazeGenerator : MonoBehaviour
         Transform wall = Instantiate(wallPrefab, pos, Quaternion.identity);
         wall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
         walls.Add(wall);
+        createdObjects.Add(wall.gameObject);
     }
 
     Dictionary<string, int> getSectionBounds(int[][] section) {

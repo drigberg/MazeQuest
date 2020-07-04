@@ -474,6 +474,12 @@ MonoBehaviour:
     type: 3}
   wallPrefab: {fileID: 3153452655558540222, guid: cd0f496ac8af144acb2675a47b270f45,
     type: 3}
+  startWallPrefab: {fileID: 8997178859681506968, guid: 68cd4aa23effb4ff1b4b6d7bb451ac41,
+    type: 3}
+  targetWallPrefab: {fileID: 1935530982436202256, guid: 7a507826f4f1f49a19bb2e2ebb050618,
+    type: 3}
+  targetDetectorPrefab: {fileID: 5387086906563976674, guid: 862abe61335d34c7b8a34f2f1ff82ce8,
+    type: 3}
   playerPrefab: {fileID: 7011666731079960015, guid: c8a5b6d53f20c493d8a6be0864cc685d,
     type: 3}
   mainCamera: {fileID: 963194229}
