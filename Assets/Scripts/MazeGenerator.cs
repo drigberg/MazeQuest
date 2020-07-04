@@ -1,20 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 /**
-REMAINING: 13 points
-    - Start level with aerial view (S)
-    - Aerial view: clearly label start and exit (M)
-    - Aerial view: allow player to click "Go" when ready, switch to player view (S)
+REMAINING: 9 points
     - Time each level at (side_length ** 2) / 10 seconds (S)
     - Display time remaining (M)
-    - If timer runs out, player loses, and has the option to restart (M)
-    - Game over: final level is displayed with total time from all levels (S)
+    - If timer runs out, player loses (S)
+    - Game over: final level is displayed with total time from all levels, and option to restart (M)
     - Revise lighting (S)
 
-DONE: 28 points
+DONE: 30 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
@@ -25,40 +23,54 @@ DONE: 28 points
     - Different color for entrance and exit platforms (S)
     - Detect success when reaching exit, display "SUCCESS!" (M)
     - When level ends, wait 3 seconds and then reset to next level with larger maze (M)
+    - Start level with aerial view (S)
+    - Aerial view: allow player to click "Go" when ready, switch to player view (S)
  */
 
 public class MazeGenerator : MonoBehaviour
 {
+    // prefabs
     public Transform floorPrefab;
     public Transform wallPrefab;
     public Transform startWallPrefab;
     public Transform targetWallPrefab;
     public Transform targetDetectorPrefab;
-    public Canvas canvas;
     public Rigidbody playerPrefab;
+
+    // GUI
+    public TMPro.TextMeshProUGUI mainText;
+    public Button startButton;
+
+
+    // camera
     public CameraController mainCamera;
-    public List<Transform> walls;
-    public float wallHeight = 2.0f;
+
+    // private
+    private List<Transform> walls;
+    private float wallHeight = 2.0f;
     private System.Random rnd = new System.Random();
     private float nextLevelTimer = 0.0f;
     private int level = 1;
-    public List<GameObject> createdObjects;
+    private List<GameObject> createdObjects;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        HideGui();
         createdObjects = new List<GameObject>();
         Reset();
+        startButton.onClick.AddListener(StartLevel);
     }
 
-    void IterateNextLevelTimer() {
-        nextLevelTimer -= Time.deltaTime;
+    void HideGui() {
+        mainText.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(false);
     }
-
+ 
     void Update() {
         if (nextLevelTimer > 0.0f) {
-            IterateNextLevelTimer();
+            nextLevelTimer -= Time.deltaTime;
             if (nextLevelTimer <= 0.0f) {
                 level += 1;
                 Reset();
@@ -73,14 +85,32 @@ public class MazeGenerator : MonoBehaviour
         createdObjects = new List<GameObject>();
     }
 
+    void SetAerialCamera(int mazeSideLength) {
+        mainCamera.mazeSideLength = (float)mazeSideLength;
+    }
+
     void Reset() {
         destroyObjects();
-        int mazeSideLength = 3 + level * 4;
-        canvas.enabled = false;
+        int mazeSideLength = 3 + level * 2;
+        SetAerialCamera(mazeSideLength);
         createFloor((float)mazeSideLength);
         createWalls(mazeSideLength);
-        createPlayer();
         createPlatforms(mazeSideLength);
+        mainText.text = "LEVEL " + level;   
+        showStartButton();  
+    }
+
+    void showStartButton() {
+        startButton.gameObject.SetActive(true);
+    }
+
+    void showMainText() {
+        mainText.gameObject.SetActive(true);
+    }
+
+    void StartLevel() {
+        HideGui();
+        createPlayer();
     }
 
     void createPlayer() {
@@ -96,8 +126,9 @@ public class MazeGenerator : MonoBehaviour
     }
 
     public void OnSuccess() {
-        canvas.enabled = true;
         nextLevelTimer = 3.0f;
+        mainText.text = "LEVEL " + level + " COMPLETE";
+        showMainText();
     }
 
     void createStartPlatform(int mazeSideLength) {
