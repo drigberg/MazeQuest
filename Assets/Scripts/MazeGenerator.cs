@@ -5,12 +5,11 @@ using UnityEngine.UI;
 
 
 /**
-REMAINING: 3 points
+REMAINING: 2 points
     - Revise lighting (S)
-    - Use points instea of total time (S)
     - Build (S)
 
-DONE: 38 points
+DONE: 39 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
@@ -27,6 +26,7 @@ DONE: 38 points
     - Display time remaining (M)
     - If timer runs out, player loses (S)
     - Game over: final level is displayed with total time from all levels, and option to restart (M)
+    - Use points instead of total time (S)
  */
 
 public class MazeGenerator : MonoBehaviour
@@ -58,7 +58,7 @@ public class MazeGenerator : MonoBehaviour
     private bool playing = false;
     private float maxLevelTime = 0.0f;
     private float levelTimer = 0.0f;
-    private float totalSeconds = 0.0f;
+    private int totalScore = 0;
     private float untilNextLevelTimer = 0.0f;
 
 
@@ -143,12 +143,13 @@ public class MazeGenerator : MonoBehaviour
     public void OnSuccess() {
         untilNextLevelTimer = 3.0f;
         playing = false;
-        totalSeconds += levelTimer;
+        int score = (int)Mathf.Round(maxLevelTime - levelTimer) * 10;
+        totalScore += score;
 
         // handle GUI
         mainText.text = "LEVEL " + level + " COMPLETE";
-        secondaryText.text = "Level time: " +  FormatFloatToOnePlace(levelTimer) + "s";
-        secondaryText.text = secondaryText.text + "\nTotal time: " + FormatFloatToOnePlace(totalSeconds) + "s";
+        secondaryText.text = "Level score: " + score;
+        secondaryText.text = secondaryText.text + "\nTotal score: " + totalScore;
         mainText.gameObject.SetActive(true);
         secondaryText.gameObject.SetActive(true); 
         timerText.gameObject.SetActive(false);
@@ -162,18 +163,17 @@ public class MazeGenerator : MonoBehaviour
     public void OnGameOver() {
         // stop game
         playing = false;
-        totalSeconds += levelTimer;
 
         // handle GUI
         mainText.text = "LEVEL " + level + " FAILED";
-        secondaryText.text = "Total time: " + FormatFloatToOnePlace(totalSeconds) + "s";
+        secondaryText.text = "Total score: " + totalScore;
         mainText.gameObject.SetActive(true);
         secondaryText.gameObject.SetActive(true); 
         timerText.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(true);
         
         // reset total time and level
-        totalSeconds = 0.0f;
+        totalScore = 0;
         level = 1;
     }
 
