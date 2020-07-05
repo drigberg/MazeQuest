@@ -5,11 +5,10 @@ using UnityEngine.UI;
 
 
 /**
-REMAINING: 2 points
-    - Revise lighting (S)
+REMAINING: 1 points
     - Build (S)
 
-DONE: 39 points
+DONE: 40 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
@@ -27,6 +26,7 @@ DONE: 39 points
     - If timer runs out, player loses (S)
     - Game over: final level is displayed with total time from all levels, and option to restart (M)
     - Use points instead of total time (S)
+    - Revise lighting (S)
  */
 
 public class MazeGenerator : MonoBehaviour
