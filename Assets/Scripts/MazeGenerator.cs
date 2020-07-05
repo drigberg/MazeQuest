@@ -5,14 +5,12 @@ using UnityEngine.UI;
 
 
 /**
-REMAINING: 9 points
-    - Time each level at (side_length ** 2) / 10 seconds (S)
-    - Display time remaining (M)
-    - If timer runs out, player loses (S)
-    - Game over: final level is displayed with total time from all levels, and option to restart (M)
+REMAINING: 3 points
     - Revise lighting (S)
+    - Use points instea of total time (S)
+    - Build (S)
 
-DONE: 30 points
+DONE: 38 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
@@ -25,6 +23,10 @@ DONE: 30 points
     - When level ends, wait 3 seconds and then reset to next level with larger maze (M)
     - Start level with aerial view (S)
     - Aerial view: allow player to click "Go" when ready, switch to player view (S)
+    - Time each level at (side_length ** 1.5) / 10 seconds (S)
+    - Display time remaining (M)
+    - If timer runs out, player loses (S)
+    - Game over: final level is displayed with total time from all levels, and option to restart (M)
  */
 
 public class MazeGenerator : MonoBehaviour
@@ -39,41 +41,50 @@ public class MazeGenerator : MonoBehaviour
 
     // GUI
     public TMPro.TextMeshProUGUI mainText;
+    public TMPro.TextMeshProUGUI secondaryText;
+    public TMPro.TextMeshProUGUI timerText;
     public Button startButton;
-
+    public Button restartButton;
 
     // camera
     public CameraController mainCamera;
 
     // private
-    private List<Transform> walls;
-    private float wallHeight = 2.0f;
     private System.Random rnd = new System.Random();
-    private float nextLevelTimer = 0.0f;
-    private int level = 1;
+    private float wallHeight = 2.0f;
+    private List<Transform> walls;
     private List<GameObject> createdObjects;
+    private int level = 1;
+    private bool playing = false;
+    private float maxLevelTime = 0.0f;
+    private float levelTimer = 0.0f;
+    private float totalSeconds = 0.0f;
+    private float untilNextLevelTimer = 0.0f;
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        HideGui();
+    void Start() {
         createdObjects = new List<GameObject>();
         Reset();
         startButton.onClick.AddListener(StartLevel);
-    }
+        restartButton.onClick.AddListener(Reset);
 
-    void HideGui() {
-        mainText.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
     }
  
     void Update() {
-        if (nextLevelTimer > 0.0f) {
-            nextLevelTimer -= Time.deltaTime;
-            if (nextLevelTimer <= 0.0f) {
+        timerText.text = FormatFloatToOnePlace(maxLevelTime - levelTimer) + "s";
+        if (untilNextLevelTimer > 0.0f) {
+            untilNextLevelTimer -= Time.deltaTime;
+            if (untilNextLevelTimer <= 0.0f) {
                 level += 1;
                 Reset();
+            }
+        }
+
+        if (playing) {
+            levelTimer += Time.deltaTime;
+            if (levelTimer >= maxLevelTime) {
+                OnGameOver();
             }
         }
     }
@@ -90,27 +101,31 @@ public class MazeGenerator : MonoBehaviour
     }
 
     void Reset() {
+        // handle maze
         destroyObjects();
-        int mazeSideLength = 3 + level * 2;
+        int mazeSideLength = 7 + level * 2;
         SetAerialCamera(mazeSideLength);
         createFloor((float)mazeSideLength);
         createWalls(mazeSideLength);
         createPlatforms(mazeSideLength);
+
+        maxLevelTime = Mathf.Round(Mathf.Pow((float)mazeSideLength, 1.25f));
+        levelTimer = 0.0f;
+
+        // handle GUI
         mainText.text = "LEVEL " + level;   
-        showStartButton();  
-    }
-
-    void showStartButton() {
+        mainText.gameObject.SetActive(true); 
         startButton.gameObject.SetActive(true);
-    }
-
-    void showMainText() {
-        mainText.gameObject.SetActive(true);
+        timerText.gameObject.SetActive(true);
+        secondaryText.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
     }
 
     void StartLevel() {
-        HideGui();
+        mainText.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(false);
         createPlayer();
+        playing = true;
     }
 
     void createPlayer() {
@@ -126,9 +141,40 @@ public class MazeGenerator : MonoBehaviour
     }
 
     public void OnSuccess() {
-        nextLevelTimer = 3.0f;
+        untilNextLevelTimer = 3.0f;
+        playing = false;
+        totalSeconds += levelTimer;
+
+        // handle GUI
         mainText.text = "LEVEL " + level + " COMPLETE";
-        showMainText();
+        secondaryText.text = "Level time: " +  FormatFloatToOnePlace(levelTimer) + "s";
+        secondaryText.text = secondaryText.text + "\nTotal time: " + FormatFloatToOnePlace(totalSeconds) + "s";
+        mainText.gameObject.SetActive(true);
+        secondaryText.gameObject.SetActive(true); 
+        timerText.gameObject.SetActive(false);
+    }
+
+    public string FormatFloatToOnePlace(float f) {
+        float rounded = Mathf.Round(f * 10.0f) / 10.0f;
+        return string.Format("{0:0.0}", rounded);
+    }
+
+    public void OnGameOver() {
+        // stop game
+        playing = false;
+        totalSeconds += levelTimer;
+
+        // handle GUI
+        mainText.text = "LEVEL " + level + " FAILED";
+        secondaryText.text = "Total time: " + FormatFloatToOnePlace(totalSeconds) + "s";
+        mainText.gameObject.SetActive(true);
+        secondaryText.gameObject.SetActive(true); 
+        timerText.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(true);
+        
+        // reset total time and level
+        totalSeconds = 0.0f;
+        level = 1;
     }
 
     void createStartPlatform(int mazeSideLength) {
