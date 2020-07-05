@@ -69,7 +69,7 @@ public class MazeGenerator : MonoBehaviour
     
         // handle GUI
         mainText.text = "MAZE QUEST";
-        secondaryText.text = "Feel the glory";
+        secondaryText.text = "Move & Turn: AWSD\nStrafe: QE";
         mainText.gameObject.SetActive(true);
         secondaryText.gameObject.SetActive(true); 
         timerText.gameObject.SetActive(false);
