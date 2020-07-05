@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public float speed = 5.0f;
 	public float turnSpeed = 0.2f;
 	private Rigidbody rb;
+	public bool disabled = false;
 
 	void Start() 
 	{
@@ -15,22 +16,24 @@ public class PlayerController : MonoBehaviour {
 	
 	void FixedUpdate () 
 	{
-		// move forwards/backwards
-		float moveVertical = Input.GetAxis("Vertical");
-		rb.AddForce(rb.transform.forward * moveVertical * speed);
+		if (!disabled) {
+			// move forwards/backwards
+			float moveVertical = Input.GetAxis("Vertical");
+			rb.AddForce(rb.transform.forward * moveVertical * speed);
 
-		// strafe
-		bool right = Input.GetKey(KeyCode.E);
-		bool left = Input.GetKey(KeyCode.Q);
-		if (right && !left) {
-			rb.AddForce(rb.transform.right * speed);
-		} else if (left && !right) {
-			rb.AddForce(rb.transform.right * speed * -1);
+			// strafe
+			bool right = Input.GetKey(KeyCode.E);
+			bool left = Input.GetKey(KeyCode.Q);
+			if (right && !left) {
+				rb.AddForce(rb.transform.right * speed);
+			} else if (left && !right) {
+				rb.AddForce(rb.transform.right * speed * -1);
+			}
+
+			// rotate
+			float moveHorizontal = Input.GetAxis("Horizontal");
+			TurnToFace(rb.transform.right * moveHorizontal);
 		}
-
-		// rotate
-		float moveHorizontal = Input.GetAxis("Horizontal");
-		TurnToFace(rb.transform.right * moveHorizontal);
 	}
 
     public void TurnToFace(Vector3 targetDirection) {

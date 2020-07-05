@@ -169,6 +169,7 @@ public class MazeGenerator : MonoBehaviour
     public void OnGameOver() {
         // stop game
         playing = false;
+        mainCamera.player.GetComponent<PlayerController>().disabled = true;
 
         // handle GUI
         mainText.text = "LEVEL " + level + " FAILED";
