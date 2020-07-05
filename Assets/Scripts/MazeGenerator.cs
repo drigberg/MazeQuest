@@ -5,10 +5,7 @@ using UnityEngine.UI;
 
 
 /**
-REMAINING: 1 points
-    - Build (S)
-
-DONE: 40 points
+DONE: 41 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
@@ -27,6 +24,7 @@ DONE: 40 points
     - Game over: final level is displayed with total time from all levels, and option to restart (M)
     - Use points instead of total time (S)
     - Revise lighting (S)
+    - Build (S)
  */
 
 public class MazeGenerator : MonoBehaviour
@@ -44,7 +42,7 @@ public class MazeGenerator : MonoBehaviour
     public TMPro.TextMeshProUGUI secondaryText;
     public TMPro.TextMeshProUGUI timerText;
     public Button startButton;
-    public Button restartButton;
+    public Button newGameButton;
 
     // camera
     public CameraController mainCamera;
@@ -64,11 +62,19 @@ public class MazeGenerator : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
+        // init listeners and objects
         createdObjects = new List<GameObject>();
-        Reset();
         startButton.onClick.AddListener(StartLevel);
-        restartButton.onClick.AddListener(Reset);
-
+        newGameButton.onClick.AddListener(Reset);
+    
+        // handle GUI
+        mainText.text = "MAZE QUEST";
+        secondaryText.text = "Feel the glory";
+        mainText.gameObject.SetActive(true);
+        secondaryText.gameObject.SetActive(true); 
+        timerText.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(false);
+        newGameButton.gameObject.SetActive(true);
     }
  
     void Update() {
@@ -118,7 +124,7 @@ public class MazeGenerator : MonoBehaviour
         startButton.gameObject.SetActive(true);
         timerText.gameObject.SetActive(true);
         secondaryText.gameObject.SetActive(false);
-        restartButton.gameObject.SetActive(false);
+        newGameButton.gameObject.SetActive(false);
     }
 
     void StartLevel() {
@@ -170,7 +176,7 @@ public class MazeGenerator : MonoBehaviour
         mainText.gameObject.SetActive(true);
         secondaryText.gameObject.SetActive(true); 
         timerText.gameObject.SetActive(false);
-        restartButton.gameObject.SetActive(true);
+        newGameButton.gameObject.SetActive(true);
         
         // reset total time and level
         totalScore = 0;

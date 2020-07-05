@@ -592,7 +592,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -670,7 +670,7 @@ GameObject:
   - component: {fileID: 1251476497}
   - component: {fileID: 1251476496}
   m_Layer: 5
-  m_Name: RestartButtonText
+  m_Name: NewGameButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAY AGAIN
+  m_text: NEW GAME
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -782,7 +782,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1251476496}
-    characterCount: 10
+    characterCount: 8
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -826,7 +826,7 @@ GameObject:
   - component: {fileID: 1259878694}
   - component: {fileID: 1259878693}
   m_Layer: 5
-  m_Name: RestartButton
+  m_Name: NewGameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -942,7 +942,7 @@ GameObject:
   - component: {fileID: 1324353082}
   - component: {fileID: 1324353081}
   m_Layer: 0
-  m_Name: Diagonal Light
+  m_Name: Diagonal Light 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -960,7 +960,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1016,13 +1016,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324353080}
-  m_LocalRotation: {x: 0.35448116, y: -0.24076033, z: 0.09498294, w: 0.8985298}
-  m_LocalPosition: {x: -7.9308033, y: -0.06344831, z: 0.071917295}
+  m_LocalRotation: {x: 0.3177337, y: 0.00043290274, z: 0.18364084, w: 0.93022645}
+  m_LocalPosition: {x: -1.4000001, y: 12.200001, z: -11.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1603946408}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 43.06, y: -30.000002, z: 0}
+  m_LocalEulerAnglesHint: {x: 36.226, y: 8.376, z: 25.079}
 --- !u!1 &1499756625
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,7 +1566,7 @@ MonoBehaviour:
   secondaryText: {fileID: 1606620086}
   timerText: {fileID: 168147877}
   startButton: {fileID: 190354915}
-  restartButton: {fileID: 1259878693}
+  newGameButton: {fileID: 1259878693}
   mainCamera: {fileID: 963194229}
 --- !u!4 &1664801001
 Transform:
@@ -1593,7 +1593,7 @@ GameObject:
   - component: {fileID: 1711245600}
   - component: {fileID: 1711245599}
   m_Layer: 0
-  m_Name: Area Light
+  m_Name: Diagonal Light 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1608,10 +1608,10 @@ Light:
   m_GameObject: {fileID: 1711245598}
   m_Enabled: 1
   serializedVersion: 10
-  m_Type: 3
+  m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1667,13 +1667,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711245598}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.0391741, y: 1.606082, z: 1.5084438}
+  m_LocalRotation: {x: 0.83830684, y: -0.14883001, z: -0.28221506, w: 0.44209272}
+  m_LocalPosition: {x: -16.5, y: 24.9, z: 17.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1603946408}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 138.912, y: 53.357994, z: 41.46399}
 --- !u!1 &2000149634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1843,6 +1843,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Main Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651077303887943791, guid: 9b60249fdb9ad4aec814787ff78ba727,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651077303887943791, guid: 9b60249fdb9ad4aec814787ff78ba727,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651077303887943791, guid: 9b60249fdb9ad4aec814787ff78ba727,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651077303887943791, guid: 9b60249fdb9ad4aec814787ff78ba727,
+        type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651077303887943791, guid: 9b60249fdb9ad4aec814787ff78ba727,
+        type: 3}
+      propertyPath: orthographic
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
