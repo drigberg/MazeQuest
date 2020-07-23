@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 
 /**
-TODO: 4 points
+TODO: 12 points
+    - Courtyards (M)
+    - Statues in courtyards (L)
     - Less slippery movement (S)
     - Camera glides to starting position (M)
 
