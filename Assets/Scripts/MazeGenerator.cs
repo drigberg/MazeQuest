@@ -4,8 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+
 /**
-DONE: 41 points
+TODO: 4 points
+    - Less slippery movement (S)
+    - Camera glides to starting position (M)
+
+DONE (Update #1): 2 points
+    - Fix timer alignment (S)
+    - Better wall texture (S)
+
+DONE (POV): 41 points
     - Maze generation logic (L)
     - Maze building (L)
     - Player controls (M)
@@ -193,21 +202,30 @@ public class MazeGenerator : MonoBehaviour
         createdObjects.Add(startPlatform.gameObject);
 
         // TODO: refactor this and reuse
-        Transform wall1 = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{-1.0f, -2.0f}), Quaternion.identity);
-        wall1.transform.localScale = new Vector3(1.0f, 3.0f, 5.0f);
-        walls.Add(wall1);
-        Transform wall2 = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{1.5f, -4.0f}), Quaternion.identity);
-        wall2.transform.localScale = new Vector3(4.0f, 3.0f, 1.0f);
-        walls.Add(wall2);
-        Transform wall3 = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{3.0f, -2.0f}), Quaternion.identity);
-        wall3.transform.localScale = new Vector3(1.0f, 3.0f, 3.0f);
-        walls.Add(wall3);
-        createdObjects.Add(wall1.gameObject);
-        createdObjects.Add(wall2.gameObject);
-        createdObjects.Add(wall3.gameObject);
+        for (int i = 0; i < 5; i++) {
+            Transform newWall = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{-1.0f, -4.0f + (float)i}), Quaternion.identity);
+            newWall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
+            walls.Add(newWall);
+            createdObjects.Add(newWall.gameObject);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            Transform newWall = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{(float)i, -4.0f}), Quaternion.identity);
+            newWall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
+            walls.Add(newWall);
+            createdObjects.Add(newWall.gameObject);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            Transform newWall = Instantiate(startWallPrefab, getPositionFromFloatCoords(new float[]{3.0f, -3.0f + (float)i}), Quaternion.identity);
+            newWall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
+            walls.Add(newWall);
+            createdObjects.Add(newWall.gameObject);
+        }
     }
 
     void createTargetPlatform(int mazeSideLength) {
+        // Target platform
         Vector3 targetPlatformPositionXZ = getPositionFromFloatCoords(new float[]{
             (float)mazeSideLength - 2.0f,
             (float)mazeSideLength + 1.0f});
@@ -224,18 +242,26 @@ public class MazeGenerator : MonoBehaviour
 
         // TODO: refactor this and reuse
         float mazeEnd = (float)mazeSideLength - 1.0f;
-        Transform wall1 = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd + 1.0f, mazeEnd + 2.0f}), Quaternion.identity);
-        wall1.transform.localScale = new Vector3(1.0f, 3.0f, 5.0f);
-        walls.Add(wall1);
-        Transform wall2 = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd - 1.5f, mazeEnd + 4.0f}), Quaternion.identity);
-        wall2.transform.localScale = new Vector3(4.0f, 3.0f, 1.0f);
-        walls.Add(wall2);
-        Transform wall3 = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd - 3.0f, mazeEnd + 2.0f}), Quaternion.identity);
-        wall3.transform.localScale = new Vector3(1.0f, 3.0f, 3.0f);
-        walls.Add(wall3);
-        createdObjects.Add(wall1.gameObject);
-        createdObjects.Add(wall2.gameObject);
-        createdObjects.Add(wall3.gameObject);
+        for (int i = 0; i < 5; i++) {
+            Transform newWall = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd + 1.0f, mazeEnd + 4.0f - (float)i}), Quaternion.identity);
+            newWall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
+            walls.Add(newWall);
+            createdObjects.Add(newWall.gameObject);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            Transform newWall = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd - (float)i, mazeEnd + 4.0f}), Quaternion.identity);
+            newWall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
+            walls.Add(newWall);
+            createdObjects.Add(newWall.gameObject);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            Transform newWall = Instantiate(targetWallPrefab, getPositionFromFloatCoords(new float[]{mazeEnd - 3.0f, mazeEnd + 3.0f - (float)i}), Quaternion.identity);
+            newWall.transform.localScale = new Vector3(1.0f, 3.0f, 1.0f);
+            walls.Add(newWall);
+            createdObjects.Add(newWall.gameObject);
+        }
     }
 
     void createFloor(float mazeSideLength) {
