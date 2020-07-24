@@ -6,15 +6,29 @@ using UnityEngine.UI;
 
 
 /**
-TODO: 12 points
-    - Courtyards (M)
-    - Statues in courtyards (L)
-    - Less slippery movement (S)
+TODO: 49 points
+    - Starting screen with flying bricks or something (L)
+    - Ending screen goes back to starting menu (M)
+    - Music
+        - Menu music (M)
+        - Gameplay music (M)
+        - Failure music (M)
+        - Success music (M)
+        - Sound effects (M)
+        - Mute icon in top-left at all times (M)
+    - Enhanced menu
+        - Audio controls (L)
+        - Instructions (S)
+    - Courtyards
+        - Can create clearings (M)
+        - Special floor texture for courtyards (M)
+        - Statues in courtyards (L)
+    - Less slippery movement (M)
     - Camera glides to starting position (M)
 
 DONE (Update #1): 2 points
     - Fix timer alignment (S)
-    - Better wall texture (S)
+    - Better wall textures (S)
 
 DONE (POV): 41 points
     - Maze generation logic (L)

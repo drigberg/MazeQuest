@@ -20,10 +20,10 @@ public class CameraController : MonoBehaviour {
             transform.position = player.transform.position - player.transform.forward * followDistance + player.transform.up * height;
             transform.rotation = player.rotation;
         } else {
-            mainCamera.orthographic = true;
+            mainCamera.orthographic = false;
             transform.position = new Vector3(
                 mazeSideLength / 2.0f,
-                mazeSideLength * 1.0f,
+                mazeSideLength * 2.0f,
                 mazeSideLength / 2.0f
             );
             transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.up);
