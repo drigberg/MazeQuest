@@ -54,6 +54,9 @@ DONE (POV): 41 points
 
 public class MazeGenerator : MonoBehaviour
 {
+    // public settings
+    public int level = 1;
+
     // prefabs
     public Transform floorPrefab;
     public Transform wallPrefab;
@@ -63,11 +66,8 @@ public class MazeGenerator : MonoBehaviour
     public Rigidbody playerPrefab;
 
     // GUI
-    public TMPro.TextMeshProUGUI mainText;
-    public TMPro.TextMeshProUGUI secondaryText;
     public TMPro.TextMeshProUGUI timerText;
-    public Button startButton;
-    public Button newGameButton;
+    public PhysicalUIController uiController;
 
     // camera
     public CameraController mainCamera;
@@ -77,7 +77,6 @@ public class MazeGenerator : MonoBehaviour
     private float wallHeight = 2.0f;
     private List<Transform> walls;
     private List<GameObject> createdObjects;
-    private int level = 1;
     private bool playing = false;
     private float maxLevelTime = 0.0f;
     private float levelTimer = 0.0f;
@@ -89,17 +88,7 @@ public class MazeGenerator : MonoBehaviour
     void Start() {
         // init listeners and objects
         createdObjects = new List<GameObject>();
-        startButton.onClick.AddListener(StartLevel);
-        newGameButton.onClick.AddListener(Reset);
-    
-        // handle GUI
-        mainText.text = "MAZE QUEST";
-        secondaryText.text = "Move & Turn: AWSD\nStrafe: QE";
-        mainText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(true); 
-        timerText.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
-        newGameButton.gameObject.SetActive(true);
+        uiController.StartMenuState();
     }
  
     void Update() {
@@ -131,7 +120,7 @@ public class MazeGenerator : MonoBehaviour
         mainCamera.mazeSideLength = (float)mazeSideLength;
     }
 
-    void Reset() {
+    public void Reset() {
         // handle maze
         destroyObjects();
         int mazeSideLength = 7 + level * 2;
@@ -142,19 +131,10 @@ public class MazeGenerator : MonoBehaviour
 
         maxLevelTime = Mathf.Round(Mathf.Pow((float)mazeSideLength, 1.25f));
         levelTimer = 0.0f;
-
-        // handle GUI
-        mainText.text = "LEVEL " + level;   
-        mainText.gameObject.SetActive(true); 
-        startButton.gameObject.SetActive(true);
-        timerText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(false);
-        newGameButton.gameObject.SetActive(false);
     }
 
-    void StartLevel() {
-        mainText.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
+    public void StartLevel() {
+        uiController.HiddenState();
         createPlayer();
         playing = true;
     }
@@ -176,14 +156,7 @@ public class MazeGenerator : MonoBehaviour
         playing = false;
         int score = (int)Mathf.Round(maxLevelTime - levelTimer) * 10;
         totalScore += score;
-
-        // handle GUI
-        mainText.text = "LEVEL " + level + " COMPLETE";
-        secondaryText.text = "Level score: " + score;
-        secondaryText.text = secondaryText.text + "\nTotal score: " + totalScore;
-        mainText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(true); 
-        timerText.gameObject.SetActive(false);
+        uiController.SuccessState(level, score, totalScore);
     }
 
     public string FormatFloatToOnePlace(float f) {
@@ -195,14 +168,7 @@ public class MazeGenerator : MonoBehaviour
         // stop game
         playing = false;
         mainCamera.player.GetComponent<PlayerController>().disabled = true;
-
-        // handle GUI
-        mainText.text = "LEVEL " + level + " FAILED";
-        secondaryText.text = "Total score: " + totalScore;
-        mainText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(true); 
-        timerText.gameObject.SetActive(false);
-        newGameButton.gameObject.SetActive(true);
+        uiController.GameOverState(level, totalScore);
         
         // reset total time and level
         totalScore = 0;
