@@ -7,8 +7,13 @@ using UnityEngine.UI;
 
 /**
 TODO: 49 points
-    - Starting screen with flying bricks or something (L)
-    - Ending screen goes back to starting menu (M)
+    - Physical UI (L)
+    - Enhanced menu
+        - Instructions (S)
+        - Audio controls (L)
+    - Camera glides to player view on level start (M)
+    - Maze reset is concealed somehow (M)
+    - Ending screen goes back to starting menu instead of new game (M)
     - Music
         - Menu music (M)
         - Gameplay music (M)
@@ -16,19 +21,16 @@ TODO: 49 points
         - Success music (M)
         - Sound effects (M)
         - Mute icon in top-left at all times (M)
-    - Enhanced menu
-        - Audio controls (L)
-        - Instructions (S)
     - Courtyards
         - Can create clearings (M)
         - Special floor texture for courtyards (M)
         - Statues in courtyards (L)
     - Less slippery movement (M)
-    - Camera glides to starting position (M)
 
-DONE (Update #1): 2 points
+DONE (Update #1): 5 points
     - Fix timer alignment (S)
     - Better wall textures (S)
+    - Camera glides to aerial view on level end (M)
 
 DONE (POV): 41 points
     - Maze generation logic (L)
