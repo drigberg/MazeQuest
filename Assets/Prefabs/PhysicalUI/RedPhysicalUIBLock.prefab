@@ -107,6 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 498453557b5054369b481317b1cc0697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frequency: 7
+  maxRotation: 2
 --- !u!1 &1963155378279798308
 GameObject:
   m_ObjectHideFlags: 0
