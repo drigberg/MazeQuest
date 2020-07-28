@@ -56,6 +56,7 @@ public class MazeGenerator : MonoBehaviour
 {
     // public settings
     public int level = 1;
+    public int mazeSideLength;
 
     // prefabs
     public Transform floorPrefab;
@@ -93,11 +94,12 @@ public class MazeGenerator : MonoBehaviour
  
     void Update() {
         timerText.text = FormatFloatToOnePlace(maxLevelTime - levelTimer) + "s";
-        if (untilNextLevelTimer > 0.0f) {
+        if (untilNextLevelTimer > 0.0f && !mainCamera.glidingToAerialView) {
             untilNextLevelTimer -= Time.deltaTime;
             if (untilNextLevelTimer <= 0.0f) {
                 level += 1;
                 Reset();
+                uiController.StartLevelState(level);
             }
         }
 
@@ -116,18 +118,18 @@ public class MazeGenerator : MonoBehaviour
         createdObjects = new List<GameObject>();
     }
 
-    void SetAerialCamera(int mazeSideLength) {
+    void SetAerialCamera() {
         mainCamera.mazeSideLength = (float)mazeSideLength;
     }
 
     public void Reset() {
         // handle maze
         destroyObjects();
-        int mazeSideLength = 7 + level * 2;
-        SetAerialCamera(mazeSideLength);
-        createFloor((float)mazeSideLength);
-        createWalls(mazeSideLength);
-        createPlatforms(mazeSideLength);
+        mazeSideLength = 7 + level * 2;
+        SetAerialCamera();
+        createFloor();
+        createWalls();
+        createPlatforms();
 
         maxLevelTime = Mathf.Round(Mathf.Pow((float)mazeSideLength, 1.25f));
         levelTimer = 0.0f;
@@ -136,6 +138,7 @@ public class MazeGenerator : MonoBehaviour
     public void StartLevel() {
         uiController.HiddenState();
         createPlayer();
+        mainCamera.lockedToPlayer = true;
         playing = true;
     }
 
@@ -146,14 +149,15 @@ public class MazeGenerator : MonoBehaviour
         createdObjects.Add(player.gameObject);
     }
 
-    void createPlatforms(int mazeSideLength) {
-        createStartPlatform(mazeSideLength);
-        createTargetPlatform(mazeSideLength);
+    void createPlatforms() {
+        createStartPlatform();
+        createTargetPlatform();
     }
 
     public void OnSuccess() {
         untilNextLevelTimer = 3.0f;
         playing = false;
+        mainCamera.StartGlideToAerialView();
         int score = (int)Mathf.Round(maxLevelTime - levelTimer) * 10;
         totalScore += score;
         uiController.SuccessState(level, score, totalScore);
@@ -168,6 +172,7 @@ public class MazeGenerator : MonoBehaviour
         // stop game
         playing = false;
         mainCamera.player.GetComponent<PlayerController>().disabled = true;
+        mainCamera.StartGlideToAerialView();
         uiController.GameOverState(level, totalScore);
         
         // reset total time and level
@@ -175,7 +180,7 @@ public class MazeGenerator : MonoBehaviour
         level = 1;
     }
 
-    void createStartPlatform(int mazeSideLength) {
+    void createStartPlatform() {
         // Start platform
         Vector3 startPlatformPositionXZ = getPositionFromFloatCoords(new float[]{1.0f, -2.0f});
         Vector3 startPlatformPosition = new Vector3(startPlatformPositionXZ.x, 0.0f, startPlatformPositionXZ.z);
@@ -206,7 +211,7 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    void createTargetPlatform(int mazeSideLength) {
+    void createTargetPlatform() {
         // Target platform
         Vector3 targetPlatformPositionXZ = getPositionFromFloatCoords(new float[]{
             (float)mazeSideLength - 2.0f,
@@ -246,14 +251,14 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    void createFloor(float mazeSideLength) {
-        Vector3 floorPos = new Vector3(mazeSideLength / 2f, 0.0f, mazeSideLength / 2f);
+    void createFloor() {
+        Vector3 floorPos = new Vector3((float)mazeSideLength / 2f, 0.0f, (float)mazeSideLength / 2f);
         Transform floor = Instantiate(floorPrefab, floorPos, Quaternion.identity);
         createdObjects.Add(floor.gameObject);
-        floor.transform.localScale = new Vector3(mazeSideLength, 1.0f, mazeSideLength);
+        floor.transform.localScale = new Vector3((float)mazeSideLength, 1.0f, (float)mazeSideLength);
     }
 
-    void createWalls(int mazeSideLength) {
+    void createWalls() {
         walls = new List<Transform>();
         int[][] enclosingSection = new int[][]{
             new int[] {0, 0},

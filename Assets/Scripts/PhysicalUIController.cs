@@ -64,10 +64,24 @@ public class PhysicalUIController : MonoBehaviour
         // newGameButton.gameObject.SetActive(true);
     }
     
-    public void NewGameState(int level) {
+    public void StartLevelState(int level) {
         destroyObjects();
-        CreateBlock(redBlockPrefab, "LEVEL\n" + level, new Vector3(0.5f, 10f, 7.0f), new Vector3(2.0f, 1.0f, 2.0f), SilentDoNothing);
-        CreateBlock(blueBlockPrefab, "START", new Vector3(10.0f, 8.0f, 2.0f), new Vector3(3.0f, 1.0f, 3.0f), OnStartLevel);
+        CreateBlock(
+            redBlockPrefab,
+            "LEVEL\n" + level,
+            new Vector3(
+                0.0f,
+                (float)mazeGenerator.mazeSideLength,
+                (float)mazeGenerator.mazeSideLength * 0.8f),
+            new Vector3(2.0f, 1.0f, 2.0f), SilentDoNothing);
+        CreateBlock(
+            blueBlockPrefab,
+            "START",
+            new Vector3(
+                (float)mazeGenerator.mazeSideLength * 1.15f,
+                (float)mazeGenerator.mazeSideLength * 0.75f,
+                (float)(float)mazeGenerator.mazeSideLength * 0.1f),
+            new Vector3(3.0f, 1.0f, 3.0f), OnStartLevel);
         mazeGenerator.timerText.gameObject.SetActive(true);
     }
 
@@ -92,7 +106,7 @@ public class PhysicalUIController : MonoBehaviour
 
     void OnNewGame() {
         mazeGenerator.Reset();
-        NewGameState(mazeGenerator.level);
+        StartLevelState(mazeGenerator.level);
     }
 
     void OnStartLevel() {
