@@ -93,7 +93,7 @@ public class MazeGenerator : MonoBehaviour
         createdObjects = new List<GameObject>();
         uiController.StartMenuState();
     }
- 
+
     void Update() {
         timerText.text = FormatFloatToOnePlace(maxLevelTime - levelTimer) + "s";
         if (untilNextLevelTimer > 0.0f && !mainCamera.glidingToAerialView) {
@@ -176,7 +176,7 @@ public class MazeGenerator : MonoBehaviour
         mainCamera.player.GetComponent<PlayerController>().disabled = true;
         mainCamera.StartGlideToAerialView();
         uiController.GameOverState(level, totalScore);
-        
+
         // reset total time and level
         totalScore = 0;
         level = 1;
@@ -390,7 +390,7 @@ public class MazeGenerator : MonoBehaviour
                 new int[] {verticalSplit, bounds["upper"]}
             }
         };
-        
+
         int[][] possibleOpenings = new int[][] {
             new int[] {
                 randomOddNumberBetweenEvens(bounds["left"], verticalSplit),
@@ -475,7 +475,7 @@ public class MazeGenerator : MonoBehaviour
             } else {
                 sideLength = bounds["upper"] - bounds["lower"];
             }
-                                
+
             for (int j = 0; j < sideLength; j++) {
                 currentPos = new int[] {
                     currentPos[0] + direction[0],

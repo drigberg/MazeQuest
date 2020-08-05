@@ -7,19 +7,20 @@ public class PhysicalUIController : MonoBehaviour
     public MazeGenerator mazeGenerator;
     public Transform redBlockPrefab;
     public Transform blueBlockPrefab;
-    
+
     private List<GameObject> createdObjects;
 
     // Start is called before the first frame update
-    void Start() {
-        createdObjects = new List<GameObject>();
+    void Start() {}
 
+    void Awake() {
+        createdObjects = new List<GameObject>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void destroyObjects() {
@@ -37,7 +38,7 @@ public class PhysicalUIController : MonoBehaviour
        Transform block = Instantiate(
            prefab,
            position,
-           Quaternion.identity); 
+           Quaternion.identity);
         block.transform.localScale = scale;
         PhysicalUIBlockController blockText = block.GetComponent<PhysicalUIBlockController>();
         blockText.SetText(text);
@@ -58,12 +59,12 @@ public class PhysicalUIController : MonoBehaviour
         // mainText.text = "MAZE QUEST";
         // secondaryText.text = "Move & Turn: AWSD\nStrafe: QE";
         // mainText.gameObject.SetActive(true);
-        // secondaryText.gameObject.SetActive(true); 
+        // secondaryText.gameObject.SetActive(true);
         // timerText.gameObject.SetActive(false);
         // startButton.gameObject.SetActive(false);
         // newGameButton.gameObject.SetActive(true);
     }
-    
+
     public void StartLevelState(int level) {
         destroyObjects();
         CreateBlock(
@@ -90,7 +91,7 @@ public class PhysicalUIController : MonoBehaviour
         // mainText.text = "LEVEL " + level + " FAILED";
         // secondaryText.text = "Total score: " + totalScore;
         // mainText.gameObject.SetActive(true);
-        // secondaryText.gameObject.SetActive(true); 
+        // secondaryText.gameObject.SetActive(true);
         // timerText.gameObject.SetActive(false);
         // newGameButton.gameObject.SetActive(true);
     }
@@ -101,7 +102,7 @@ public class PhysicalUIController : MonoBehaviour
         // secondaryText.text = "Level score: " + score;
         // secondaryText.text = secondaryText.text + "\nTotal score: " + totalScore;
         // mainText.gameObject.SetActive(true);
-        // secondaryText.gameObject.SetActive(true); 
+        // secondaryText.gameObject.SetActive(true);
     }
 
     void OnNewGame() {
