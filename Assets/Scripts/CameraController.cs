@@ -28,6 +28,17 @@ public class CameraController : MonoBehaviour {
         mazeSideLength = 1.0f;
     }
 
+    void Update() {
+        if (glidingToAerialView) {
+            GlideToAerialView();
+        } else if (player && lockedToPlayer) {
+            FollowPlayer();
+        } else {
+            transform.position = GetAerialViewPosition();
+            transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.up);
+        }
+    }
+
     public void StartGlideToAerialView() {
         lockedToPlayer = false;
         localTime = 0.0f;
@@ -54,7 +65,7 @@ public class CameraController : MonoBehaviour {
     Vector3 GetAerialViewPosition() {
         return new Vector3(
             mazeSideLength / 2.0f,
-            mazeSideLength * 2.0f,
+            (int)Mathf.Ceil(mazeSideLength * 0.914f + 11.43f),
             mazeSideLength / 2.0f
         );
     }
@@ -62,16 +73,5 @@ public class CameraController : MonoBehaviour {
     void FollowPlayer() {
         transform.position = player.transform.position - player.transform.forward * followDistance + player.transform.up * height;
         transform.rotation = player.rotation;
-    }
-
-    void Update() {
-        if (glidingToAerialView) {
-            GlideToAerialView();
-        } else if (player && lockedToPlayer) {
-            FollowPlayer();
-        } else {
-            transform.position = GetAerialViewPosition();
-            transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.up);
-        }
     }
 }

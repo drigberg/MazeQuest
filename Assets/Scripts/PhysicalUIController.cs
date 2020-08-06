@@ -71,17 +71,17 @@ public class PhysicalUIController : MonoBehaviour
             redBlockPrefab,
             "LEVEL\n" + level,
             new Vector3(
-                0.0f,
-                (float)mazeGenerator.mazeSideLength,
-                (float)mazeGenerator.mazeSideLength * 0.8f),
+                (float)mazeGenerator.mazeSideLength * 0.47222f - 4.75f,
+                (float)mazeGenerator.mazeSideLength *0.9074f + 2.859f,
+                (float)mazeGenerator.mazeSideLength *0.509f  +2.417f),
             new Vector3(2.0f, 1.0f, 2.0f), SilentDoNothing);
         CreateBlock(
             blueBlockPrefab,
             "START",
             new Vector3(
-                (float)mazeGenerator.mazeSideLength * 1.15f,
-                (float)mazeGenerator.mazeSideLength * 0.75f,
-                (float)(float)mazeGenerator.mazeSideLength * 0.1f),
+                (float)mazeGenerator.mazeSideLength * 0.5463f + 6.583f,
+                (float)mazeGenerator.mazeSideLength *0.888f,
+                (float)mazeGenerator.mazeSideLength *0.5f - 3.5f),
             new Vector3(3.0f, 1.0f, 3.0f), OnStartLevel);
         mazeGenerator.timerText.gameObject.SetActive(true);
     }
