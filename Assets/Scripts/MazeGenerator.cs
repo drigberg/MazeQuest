@@ -6,11 +6,9 @@ using UnityEngine.UI;
 
 
 /**
-TODO: 44 points
+TODO: 43 points
     - Enhanced menu
-        - Instructions (S)
         - Audio controls (L)
-        - Level select (M)
     - Camera glides to player view on level start (M)
     - Maze reset is concealed somehow (M)
     - Music
@@ -26,12 +24,15 @@ TODO: 44 points
         - Statues in courtyards (L)
     - Less slippery movement (M)
 
-DONE (Update #1): 13 points
+DONE (Update #1): 22 points
     - Fix timer alignment (S)
     - Better wall textures (S)
     - Camera glides to aerial view on level end (M)
     - Physical UI (L)
     - Ending screen goes back to starting menu instead of new game (M)
+    - Enhanced menu
+        - Level select (M)
+        - Instructions (S)
 
 DONE (POV): 41 points
     - Maze generation logic (L)
