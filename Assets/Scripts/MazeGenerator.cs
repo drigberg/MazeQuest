@@ -84,7 +84,6 @@ public class MazeGenerator : MonoBehaviour
     private float maxLevelTime = 0.0f;
     private float levelTimer = 0.0f;
     private int totalScore = 0;
-    private float untilNextLevelTimer = 0.0f;
 
 
     // Start is called before the first frame update
@@ -96,21 +95,18 @@ public class MazeGenerator : MonoBehaviour
 
     void Update() {
         timerText.text = FormatFloatToOnePlace(maxLevelTime - levelTimer) + "s";
-        if (untilNextLevelTimer > 0.0f && !mainCamera.glidingToAerialView) {
-            untilNextLevelTimer -= Time.deltaTime;
-            if (untilNextLevelTimer <= 0.0f) {
-                level += 1;
-                Reset();
-                uiController.StartLevelState(level);
-            }
-        }
-
         if (playing) {
             levelTimer += Time.deltaTime;
             if (levelTimer >= maxLevelTime) {
                 OnGameOver();
             }
         }
+    }
+
+    public void NextLevel() {
+        level += 1;
+        Reset();
+        uiController.StartLevelState(level);
     }
 
     void destroyObjects() {
@@ -120,15 +116,15 @@ public class MazeGenerator : MonoBehaviour
         createdObjects = new List<GameObject>();
     }
 
-    void SetAerialCamera() {
-        mainCamera.mazeSideLength = (float)mazeSideLength;
+    public void Destroy() {
+        destroyObjects();
+        level = 1;
     }
 
     public void Reset() {
         // handle maze
         destroyObjects();
         mazeSideLength = 7 + level * 2;
-        SetAerialCamera();
         createFloor();
         createWalls();
         createPlatforms();
@@ -157,7 +153,6 @@ public class MazeGenerator : MonoBehaviour
     }
 
     public void OnSuccess() {
-        untilNextLevelTimer = 3.0f;
         playing = false;
         mainCamera.StartGlideToAerialView();
         int score = (int)Mathf.Round(maxLevelTime - levelTimer) * 10;

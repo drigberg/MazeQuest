@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: 375}
+  m_AnchoredPosition: {x: -152, y: 173}
   m_SizeDelta: {x: 1000, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &168147877
@@ -210,8 +210,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   mainCamera: {fileID: 0}
-  mazeSideLength: 0
+  mazeGenerator: {fileID: 1664801000}
   followDistance: 0.5
   height: 1
   turnSpeed: 0.2
@@ -932,6 +932,8 @@ MonoBehaviour:
     type: 3}
   blueBlockPrefab: {fileID: 7120584536037703282, guid: 7b766ceea0435420c93928d500727051,
     type: 3}
+  state: 
+  cameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1711245598
 GameObject:
   m_ObjectHideFlags: 0

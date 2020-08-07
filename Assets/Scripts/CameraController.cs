@@ -4,9 +4,7 @@ public class CameraController : MonoBehaviour {
     // objects
     public Rigidbody player;
     public Camera mainCamera;
-
-    // maze parameters
-    public float mazeSideLength;
+    public MazeGenerator mazeGenerator;
 
     // player follow parameters
     public float followDistance = 10.5f;
@@ -25,7 +23,6 @@ public class CameraController : MonoBehaviour {
 
     void Start() {
         mainCamera = GetComponent<Camera>();
-        mazeSideLength = 1.0f;
     }
 
     void Update() {
@@ -63,11 +60,15 @@ public class CameraController : MonoBehaviour {
     }
 
     Vector3 GetAerialViewPosition() {
-        return new Vector3(
-            mazeSideLength / 2.0f,
-            (int)Mathf.Ceil(mazeSideLength * 0.914f + 11.43f),
-            mazeSideLength / 2.0f
-        );
+        if (mazeGenerator.uiController.state == "START_MENU") {
+            return mazeGenerator.uiController.cameraPosition;
+        } else {
+            return new Vector3(
+                mazeGenerator.mazeSideLength / 2.0f,
+                (int)Mathf.Ceil(mazeGenerator.mazeSideLength * 0.914f + 11.43f),
+                mazeGenerator.mazeSideLength / 2.0f
+            );
+        }
     }
 
     void FollowPlayer() {

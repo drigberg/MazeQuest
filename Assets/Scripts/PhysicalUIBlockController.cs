@@ -6,11 +6,11 @@ using TMPro;
 public class PhysicalUIBlockController : MonoBehaviour
 {
     // text
-    public delegate void Action(); 
+    public delegate void Action();
     public Action action = DoNothing;
     private Canvas canvas;
     private TMPro.TextMeshProUGUI textMesh;
- 
+
     // movement
     public float frequency = 6.0f;
     public float maxRotation = 2.0f;
@@ -40,10 +40,11 @@ public class PhysicalUIBlockController : MonoBehaviour
         action();
     }
 
-    public void SetText(string text) {
+    public void SetText(string text, float textStretch) {
         canvas = transform.GetChild(0).GetComponent<Canvas>();
         textMesh = canvas.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>();
         textMesh.SetText(text);
+        textMesh.transform.localScale = new Vector3(textStretch, 1.0f, 1.0f);
     }
 
     public void SetAction(Action method) {
