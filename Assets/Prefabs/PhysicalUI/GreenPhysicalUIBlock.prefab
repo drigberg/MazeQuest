@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 1963155377318358585, guid: 6c50cb8dbdf7a403292003ecfabee527,
         type: 3}
       propertyPath: m_Name
-      value: BluePhysicalUIBlock
+      value: GreenPhysicalUIBlock
       objectReference: {fileID: 0}
     - target: {fileID: 1963155377318358588, guid: 6c50cb8dbdf7a403292003ecfabee527,
         type: 3}
@@ -81,11 +81,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 18c50e41b2494445fa6fffea402c2724, type: 2}
+      objectReference: {fileID: 2100000, guid: 7ec4b7679eba643a7a99256a1ad7d468, type: 2}
     - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 8
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
         type: 3}
@@ -126,6 +126,33 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textAlignment
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963155378279798330, guid: 6c50cb8dbdf7a403292003ecfabee527,
+        type: 3}
+      propertyPath: m_text
+      value: 'LEVEL
+
+        SELECT'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c50cb8dbdf7a403292003ecfabee527, type: 3}

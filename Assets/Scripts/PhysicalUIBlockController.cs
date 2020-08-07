@@ -8,8 +8,6 @@ public class PhysicalUIBlockController : MonoBehaviour
     // text
     public delegate void Action();
     public Action action = DoNothing;
-    private Canvas canvas;
-    private TMPro.TextMeshProUGUI textMesh;
 
     // movement
     public float frequency = 6.0f;
@@ -41,8 +39,8 @@ public class PhysicalUIBlockController : MonoBehaviour
     }
 
     public void SetText(string text, float textStretch) {
-        canvas = transform.GetChild(0).GetComponent<Canvas>();
-        textMesh = canvas.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>();
+        Canvas canvas = transform.GetChild(0).GetComponent<Canvas>();
+        TMPro.TextMeshProUGUI textMesh = canvas.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>();
         textMesh.SetText(text);
         textMesh.transform.localScale = new Vector3(textStretch, 1.0f, 1.0f);
     }

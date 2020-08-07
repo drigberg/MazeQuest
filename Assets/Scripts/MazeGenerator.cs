@@ -6,14 +6,13 @@ using UnityEngine.UI;
 
 
 /**
-TODO: 49 points
-    - Physical UI (L)
+TODO: 44 points
     - Enhanced menu
         - Instructions (S)
         - Audio controls (L)
+        - Level select (M)
     - Camera glides to player view on level start (M)
     - Maze reset is concealed somehow (M)
-    - Ending screen goes back to starting menu instead of new game (M)
     - Music
         - Menu music (M)
         - Gameplay music (M)
@@ -27,10 +26,12 @@ TODO: 49 points
         - Statues in courtyards (L)
     - Less slippery movement (M)
 
-DONE (Update #1): 5 points
+DONE (Update #1): 13 points
     - Fix timer alignment (S)
     - Better wall textures (S)
     - Camera glides to aerial view on level end (M)
+    - Physical UI (L)
+    - Ending screen goes back to starting menu instead of new game (M)
 
 DONE (POV): 41 points
     - Maze generation logic (L)
@@ -58,6 +59,7 @@ public class MazeGenerator : MonoBehaviour
 {
     // public settings
     public int level = 1;
+    public int maxLevelReached = 1;
     public int mazeSideLength;
 
     // prefabs
@@ -105,6 +107,9 @@ public class MazeGenerator : MonoBehaviour
 
     public void NextLevel() {
         level += 1;
+        if (level > maxLevelReached) {
+            maxLevelReached = level;
+        }
         Reset();
         uiController.StartLevelState(level);
     }
@@ -119,6 +124,11 @@ public class MazeGenerator : MonoBehaviour
     public void Destroy() {
         destroyObjects();
         level = 1;
+    }
+
+    public void NewGameFromLevel(int targetLevel) {
+        level = targetLevel;
+        Reset();
     }
 
     public void Reset() {

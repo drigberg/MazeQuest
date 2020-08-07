@@ -155,10 +155,10 @@ RectTransform:
   m_Father: {fileID: 2000149638}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -152, y: 173}
-  m_SizeDelta: {x: 1000, y: 50}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -293, y: -61}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &168147877
 MonoBehaviour:
@@ -885,6 +885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
+  maxLevelReached: 1
   mazeSideLength: 0
   floorPrefab: {fileID: 5300172724544411903, guid: 7606a87ec3e1f4b8690ea898b32e92c4,
     type: 3}
@@ -931,6 +932,10 @@ MonoBehaviour:
   redBlockPrefab: {fileID: 1963155377318358589, guid: 6c50cb8dbdf7a403292003ecfabee527,
     type: 3}
   blueBlockPrefab: {fileID: 7120584536037703282, guid: 7b766ceea0435420c93928d500727051,
+    type: 3}
+  greenBlockPrefab: {fileID: 7120584536037703282, guid: a30a3f07a2857434e92e9942f758f706,
+    type: 3}
+  redBlockInputPrefab: {fileID: 1963155377318358589, guid: bea67aa08ff6344a69bf2981662f71ef,
     type: 3}
   state: 
   cameraPosition: {x: 0, y: 0, z: 0}

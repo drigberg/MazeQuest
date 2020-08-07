@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour {
         mainCamera = GetComponent<Camera>();
     }
 
-    void Update() {
+    void FixedUpdate() {
         if (glidingToAerialView) {
             GlideToAerialView();
         } else if (player && lockedToPlayer) {
