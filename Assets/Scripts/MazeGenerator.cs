@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 
 /**
-TODO: 49 points
-    - Starting screen with flying bricks or something (L)
-    - Ending screen goes back to starting menu (M)
+TODO: 48 points
+    - Camera glides to player view on level start (M)
+    - Maze reset is concealed somehow (M)
     - Music
         - Menu music (M)
         - Gameplay music (M)
@@ -18,17 +18,22 @@ TODO: 49 points
         - Mute icon in top-left at all times (M)
     - Enhanced menu
         - Audio controls (L)
-        - Instructions (S)
+        - Nicer level select (L)
     - Courtyards
         - Can create clearings (M)
         - Special floor texture for courtyards (M)
         - Statues in courtyards (L)
     - Less slippery movement (M)
-    - Camera glides to starting position (M)
 
-DONE (Update #1): 2 points
+DONE (Update #1): 22 points
     - Fix timer alignment (S)
     - Better wall textures (S)
+    - Camera glides to aerial view on level end (M)
+    - Physical UI (L)
+    - Ending screen goes back to starting menu instead of new game (M)
+    - Enhanced menu
+        - Level select (M)
+        - Instructions (S)
 
 DONE (POV): 41 points
     - Maze generation logic (L)
@@ -54,6 +59,11 @@ DONE (POV): 41 points
 
 public class MazeGenerator : MonoBehaviour
 {
+    // public settings
+    public int level = 1;
+    public int maxLevelReached = 1;
+    public int mazeSideLength;
+
     // prefabs
     public Transform floorPrefab;
     public Transform wallPrefab;
@@ -63,11 +73,8 @@ public class MazeGenerator : MonoBehaviour
     public Rigidbody playerPrefab;
 
     // GUI
-    public TMPro.TextMeshProUGUI mainText;
-    public TMPro.TextMeshProUGUI secondaryText;
     public TMPro.TextMeshProUGUI timerText;
-    public Button startButton;
-    public Button newGameButton;
+    public PhysicalUIController uiController;
 
     // camera
     public CameraController mainCamera;
@@ -77,47 +84,36 @@ public class MazeGenerator : MonoBehaviour
     private float wallHeight = 2.0f;
     private List<Transform> walls;
     private List<GameObject> createdObjects;
-    private int level = 1;
     private bool playing = false;
     private float maxLevelTime = 0.0f;
     private float levelTimer = 0.0f;
     private int totalScore = 0;
-    private float untilNextLevelTimer = 0.0f;
 
 
     // Start is called before the first frame update
     void Start() {
         // init listeners and objects
         createdObjects = new List<GameObject>();
-        startButton.onClick.AddListener(StartLevel);
-        newGameButton.onClick.AddListener(Reset);
-    
-        // handle GUI
-        mainText.text = "MAZE QUEST";
-        secondaryText.text = "Move & Turn: AWSD\nStrafe: QE";
-        mainText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(true); 
-        timerText.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
-        newGameButton.gameObject.SetActive(true);
+        uiController.StartMenuState();
     }
- 
+
     void Update() {
         timerText.text = FormatFloatToOnePlace(maxLevelTime - levelTimer) + "s";
-        if (untilNextLevelTimer > 0.0f) {
-            untilNextLevelTimer -= Time.deltaTime;
-            if (untilNextLevelTimer <= 0.0f) {
-                level += 1;
-                Reset();
-            }
-        }
-
         if (playing) {
             levelTimer += Time.deltaTime;
             if (levelTimer >= maxLevelTime) {
                 OnGameOver();
             }
         }
+    }
+
+    public void NextLevel() {
+        level += 1;
+        if (level > maxLevelReached) {
+            maxLevelReached = level;
+        }
+        Reset();
+        uiController.StartLevelState(level);
     }
 
     void destroyObjects() {
@@ -127,35 +123,32 @@ public class MazeGenerator : MonoBehaviour
         createdObjects = new List<GameObject>();
     }
 
-    void SetAerialCamera(int mazeSideLength) {
-        mainCamera.mazeSideLength = (float)mazeSideLength;
+    public void Destroy() {
+        destroyObjects();
+        level = 1;
     }
 
-    void Reset() {
+    public void NewGameFromLevel(int targetLevel) {
+        level = targetLevel;
+        Reset();
+    }
+
+    public void Reset() {
         // handle maze
         destroyObjects();
-        int mazeSideLength = 7 + level * 2;
-        SetAerialCamera(mazeSideLength);
-        createFloor((float)mazeSideLength);
-        createWalls(mazeSideLength);
-        createPlatforms(mazeSideLength);
+        mazeSideLength = 7 + level * 2;
+        createFloor();
+        createWalls();
+        createPlatforms();
 
         maxLevelTime = Mathf.Round(Mathf.Pow((float)mazeSideLength, 1.25f));
         levelTimer = 0.0f;
-
-        // handle GUI
-        mainText.text = "LEVEL " + level;   
-        mainText.gameObject.SetActive(true); 
-        startButton.gameObject.SetActive(true);
-        timerText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(false);
-        newGameButton.gameObject.SetActive(false);
     }
 
-    void StartLevel() {
-        mainText.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
+    public void StartLevel() {
+        uiController.HiddenState();
         createPlayer();
+        mainCamera.lockedToPlayer = true;
         playing = true;
     }
 
@@ -166,24 +159,17 @@ public class MazeGenerator : MonoBehaviour
         createdObjects.Add(player.gameObject);
     }
 
-    void createPlatforms(int mazeSideLength) {
-        createStartPlatform(mazeSideLength);
-        createTargetPlatform(mazeSideLength);
+    void createPlatforms() {
+        createStartPlatform();
+        createTargetPlatform();
     }
 
     public void OnSuccess() {
-        untilNextLevelTimer = 3.0f;
         playing = false;
+        mainCamera.StartGlideToAerialView();
         int score = (int)Mathf.Round(maxLevelTime - levelTimer) * 10;
         totalScore += score;
-
-        // handle GUI
-        mainText.text = "LEVEL " + level + " COMPLETE";
-        secondaryText.text = "Level score: " + score;
-        secondaryText.text = secondaryText.text + "\nTotal score: " + totalScore;
-        mainText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(true); 
-        timerText.gameObject.SetActive(false);
+        uiController.SuccessState(level, score, totalScore);
     }
 
     public string FormatFloatToOnePlace(float f) {
@@ -195,21 +181,15 @@ public class MazeGenerator : MonoBehaviour
         // stop game
         playing = false;
         mainCamera.player.GetComponent<PlayerController>().disabled = true;
+        mainCamera.StartGlideToAerialView();
+        uiController.GameOverState(level, totalScore);
 
-        // handle GUI
-        mainText.text = "LEVEL " + level + " FAILED";
-        secondaryText.text = "Total score: " + totalScore;
-        mainText.gameObject.SetActive(true);
-        secondaryText.gameObject.SetActive(true); 
-        timerText.gameObject.SetActive(false);
-        newGameButton.gameObject.SetActive(true);
-        
         // reset total time and level
         totalScore = 0;
         level = 1;
     }
 
-    void createStartPlatform(int mazeSideLength) {
+    void createStartPlatform() {
         // Start platform
         Vector3 startPlatformPositionXZ = getPositionFromFloatCoords(new float[]{1.0f, -2.0f});
         Vector3 startPlatformPosition = new Vector3(startPlatformPositionXZ.x, 0.0f, startPlatformPositionXZ.z);
@@ -240,7 +220,7 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    void createTargetPlatform(int mazeSideLength) {
+    void createTargetPlatform() {
         // Target platform
         Vector3 targetPlatformPositionXZ = getPositionFromFloatCoords(new float[]{
             (float)mazeSideLength - 2.0f,
@@ -280,14 +260,14 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    void createFloor(float mazeSideLength) {
-        Vector3 floorPos = new Vector3(mazeSideLength / 2f, 0.0f, mazeSideLength / 2f);
+    void createFloor() {
+        Vector3 floorPos = new Vector3((float)mazeSideLength / 2f, 0.0f, (float)mazeSideLength / 2f);
         Transform floor = Instantiate(floorPrefab, floorPos, Quaternion.identity);
         createdObjects.Add(floor.gameObject);
-        floor.transform.localScale = new Vector3(mazeSideLength, 1.0f, mazeSideLength);
+        floor.transform.localScale = new Vector3((float)mazeSideLength, 1.0f, (float)mazeSideLength);
     }
 
-    void createWalls(int mazeSideLength) {
+    void createWalls() {
         walls = new List<Transform>();
         int[][] enclosingSection = new int[][]{
             new int[] {0, 0},
@@ -417,7 +397,7 @@ public class MazeGenerator : MonoBehaviour
                 new int[] {verticalSplit, bounds["upper"]}
             }
         };
-        
+
         int[][] possibleOpenings = new int[][] {
             new int[] {
                 randomOddNumberBetweenEvens(bounds["left"], verticalSplit),
@@ -502,7 +482,7 @@ public class MazeGenerator : MonoBehaviour
             } else {
                 sideLength = bounds["upper"] - bounds["lower"];
             }
-                                
+
             for (int j = 0; j < sideLength; j++) {
                 currentPos = new int[] {
                     currentPos[0] + direction[0],
