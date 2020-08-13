@@ -8,12 +8,12 @@ public class PhysicalUIController : MonoBehaviour
     public Transform redBlockPrefab;
     public Transform blueBlockPrefab;
     public Transform greenBlockPrefab;
-    public Transform redBlockInputPrefab;
     public string state;
     public Vector3 cameraPosition;
 
     private List<GameObject> createdObjects;
-    private PhysicalUIBlockInputController levelSelectInput;
+    private int levelSelectCounter;
+    private PhysicalUIBlockController levelSelectDisplayController;
 
     // movement
     private float localTime = 0.0f;
@@ -74,26 +74,12 @@ public class PhysicalUIController : MonoBehaviour
            position,
            Quaternion.identity);
         block.transform.localScale = scale;
-        PhysicalUIBlockController blockText = block.GetComponent<PhysicalUIBlockController>();
+        PhysicalUIBlockController blockController = block.GetComponent<PhysicalUIBlockController>();
         float textStretch = scale.z / scale.x;
-        blockText.SetText(text, textStretch);
-        blockText.SetAction(action);
+        blockController.SetText(text, textStretch);
+        blockController.SetAction(action);
         createdObjects.Add(block.gameObject);
-        return blockText;
-    }
-
-    public PhysicalUIBlockInputController CreateInputBlock(
-            Transform prefab,
-            Vector3 position,
-            Vector3 scale) {
-        Transform block = Instantiate(
-           prefab,
-           position,
-           Quaternion.identity);
-        block.transform.localScale = scale;
-        PhysicalUIBlockInputController blockText = block.GetComponent<PhysicalUIBlockInputController>();
-        createdObjects.Add(block.gameObject);
-        return blockText;
+        return blockController;
     }
 
     public void SilentDoNothing() {
@@ -137,11 +123,25 @@ public class PhysicalUIController : MonoBehaviour
     }
 
     public void CreateLevelSelectBlocks(Vector3 localOrigin) {
-        levelSelectInput = CreateInputBlock(
-            redBlockInputPrefab,
+        levelSelectCounter = 1;
+        levelSelectDisplayController = CreateBlock(
+            redBlockPrefab,
+            levelSelectCounter.ToString(),
             localOrigin + new Vector3(0.0f, -2.0f, 0.5f),
-            new Vector3(1.0f, 1.0f, 1.0f));
-        levelSelectInput.inputField.text = "1";
+            new Vector3(1.0f, 1.0f, 1.0f),
+            SilentDoNothing);
+        CreateBlock(
+            blueBlockPrefab,
+            "-",
+            localOrigin + new Vector3(1.25f, -2.0f, 1.0f),
+            new Vector3(0.75f, 0.75f, 0.75f),
+            OnLevelSelectMinus);
+        CreateBlock(
+            blueBlockPrefab,
+            "+",
+            localOrigin + new Vector3(1.25f, -2.0f, 0.0f),
+            new Vector3(0.75f, 0.75f, 0.75f),
+            OnLevelSelectPlus);
         CreateBlock(
             blueBlockPrefab,
             "JUMP TO\nLEVEL",
@@ -151,7 +151,7 @@ public class PhysicalUIController : MonoBehaviour
         CreateBlock(
             greenBlockPrefab,
             "MAIN\nSCREEN",
-            localOrigin + new Vector3(-3.0f, -3.0f, 0.0f),
+            localOrigin + new Vector3(-3.5f, -3.0f, 0.0f),
             new Vector3(1.3f, 1.0f, 1.0f),
             OnGlideToMainScreen);
     }
@@ -234,19 +234,24 @@ public class PhysicalUIController : MonoBehaviour
         StartGlideToPosition(mainScreenOrigin);
     }
 
-    public void OnLevelSelect() {
-        string levelString = levelSelectInput.inputField.text;
-        int level = 1;
-        if (levelString != "") {
-            level = int.Parse(levelString);
-            if (level < 1) {
-                level = 1;
-            }
-            else if (level > mazeGenerator.maxLevelReached) {
-                level = mazeGenerator.maxLevelReached;
-            }
+    public void OnLevelSelectMinus() {
+        levelSelectCounter -= 1;
+        if (levelSelectCounter < 1) {
+            levelSelectCounter = 1;
         }
-        NewGame(level);
+        levelSelectDisplayController.SetText(levelSelectCounter.ToString(), 1.0f);
+    }
+
+    public void OnLevelSelectPlus() {
+        levelSelectCounter += 1;
+        if (levelSelectCounter > mazeGenerator.maxLevelReached) {
+            levelSelectCounter = mazeGenerator.maxLevelReached;
+        }
+        levelSelectDisplayController.SetText(levelSelectCounter.ToString(), 1.0f);
+    }
+
+    public void OnLevelSelect() {
+        NewGame(levelSelectCounter);
     }
 
     public void NewGame(int level) {
