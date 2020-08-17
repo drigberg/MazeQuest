@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 
 /**
-TODO: 48 points
+TODO: 43 points
     - Camera glides to player view on level start (M)
     - Maze reset is concealed somehow (M)
     - Music
@@ -18,14 +18,14 @@ TODO: 48 points
         - Mute icon in top-left at all times (M)
     - Enhanced menu
         - Audio controls (L)
-        - Nicer level select (L)
     - Courtyards
         - Can create clearings (M)
         - Special floor texture for courtyards (M)
         - Statues in courtyards (L)
     - Less slippery movement (M)
 
-DONE (Update #1): 22 points
+DONE (Update #1): 25 points
+    - Nicer level select (M)
     - Fix timer alignment (S)
     - Better wall textures (S)
     - Camera glides to aerial view on level end (M)

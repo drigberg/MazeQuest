@@ -111,29 +111,35 @@ public class PhysicalUIController : MonoBehaviour
         CreateBlock(
             greenBlockPrefab,
             "LEVEL\nSELECT",
-            localOrigin + new Vector3(3.0f, -3.0f, 0.0f),
+            localOrigin + new Vector3(3.0f, -3.0f, 1.25f),
             new Vector3(1.3f, 1.0f, 1.0f),
             OnGlideToLevelSelect);
         CreateBlock(
             greenBlockPrefab,
             "CONTROLS",
-            localOrigin + new Vector3(-3.0f, -3.0f, 0.0f),
+            localOrigin + new Vector3(-3.0f, -3.0f, 1.25f),
             new Vector3(1.3f, 1.0f, 1.0f),
             OnGlideToControls);
     }
 
     public void CreateLevelSelectBlocks(Vector3 localOrigin) {
-        levelSelectCounter = 1;
+        levelSelectCounter = mazeGenerator.maxLevelReached;
+        CreateBlock(
+            redBlockPrefab,
+            "Your current\nbest: " + mazeGenerator.maxLevelReached,
+            localOrigin + new Vector3(0.0f, -2.0f, 1.25f),
+            new Vector3(1.5f, 1.0f, 1.0f),
+            SilentDoNothing);
         levelSelectDisplayController = CreateBlock(
             redBlockPrefab,
             levelSelectCounter.ToString(),
-            localOrigin + new Vector3(0.0f, -2.0f, 0.5f),
+            localOrigin + new Vector3(0.0f, -2.0f, 0.0f),
             new Vector3(1.0f, 1.0f, 1.0f),
             SilentDoNothing);
         CreateBlock(
             blueBlockPrefab,
             "-",
-            localOrigin + new Vector3(1.25f, -2.0f, 1.0f),
+            localOrigin + new Vector3(-1.25f, -2.0f, 0.0f),
             new Vector3(0.75f, 0.75f, 0.75f),
             OnLevelSelectMinus);
         CreateBlock(
@@ -145,13 +151,13 @@ public class PhysicalUIController : MonoBehaviour
         CreateBlock(
             blueBlockPrefab,
             "JUMP TO\nLEVEL",
-            localOrigin + new Vector3(0.0f, -3.0f, -1.5f),
+            localOrigin + new Vector3(0.0f, -3.0f, -1.75f),
             new Vector3(1.5f, 1.0f, 1.0f),
             OnLevelSelect);
         CreateBlock(
             greenBlockPrefab,
             "MAIN\nSCREEN",
-            localOrigin + new Vector3(-3.5f, -3.0f, 0.0f),
+            localOrigin + new Vector3(-3.0f, -3.0f, 1.25f),
             new Vector3(1.3f, 1.0f, 1.0f),
             OnGlideToMainScreen);
     }
@@ -160,49 +166,37 @@ public class PhysicalUIController : MonoBehaviour
         CreateBlock(
             redBlockPrefab,
             "CONTROLS",
-            localOrigin + new Vector3(0.0f, -3.0f, 1.5f),
+            localOrigin + new Vector3(0.0f, -3.0f, 1.25f),
             new Vector3(3.0f, 1.0f, 1.5f),
             SilentDoNothing);
         CreateBlock(
             redBlockPrefab,
             "MOVE",
-            localOrigin + new Vector3(-1.0f, -2.0f, 0f),
+            localOrigin + new Vector3(-1.0f, -2.0f, -0.25f),
             new Vector3(1.0f, 1.0f, 0.75f),
             SilentDoNothing);
         CreateBlock(
             blueBlockPrefab,
             "AWSD",
-            localOrigin + new Vector3(1.0f, -2.0f, 0f),
+            localOrigin + new Vector3(1.0f, -2.0f, -0.25f),
             new Vector3(1.0f, 1.0f, 0.75f),
             SilentDoNothing);
         CreateBlock(
             redBlockPrefab,
             "LOOK",
-            localOrigin + new Vector3(-1.0f, -2.0f, -0.8f),
+            localOrigin + new Vector3(-1.0f, -2.0f, -1.25f),
             new Vector3(1.0f, 1.0f, 0.75f),
             SilentDoNothing);
         CreateBlock(
             blueBlockPrefab,
             "MOUSE",
-            localOrigin + new Vector3(1.0f, -2.0f, -0.8f),
-            new Vector3(1.0f, 1.0f, 0.75f),
-            SilentDoNothing);
-        CreateBlock(
-            redBlockPrefab,
-            "STRAFE",
-            localOrigin + new Vector3(-1.0f, -2.0f, -1.6f),
-            new Vector3(1.0f, 1.0f, 0.75f),
-            SilentDoNothing);
-        CreateBlock(
-            blueBlockPrefab,
-            "QE",
-            localOrigin + new Vector3(1.0f, -2.0f, -1.6f),
+            localOrigin + new Vector3(1.0f, -2.0f, -1.25f),
             new Vector3(1.0f, 1.0f, 0.75f),
             SilentDoNothing);
         CreateBlock(
             greenBlockPrefab,
             "MAIN\nSCREEN",
-            localOrigin + new Vector3(3.0f, -3.0f, 0.0f),
+            localOrigin + new Vector3(3.0f, -3.0f, 1.25f),
             new Vector3(1.3f, 1.0f, 1.0f),
             OnGlideToMainScreen);
     }
@@ -271,6 +265,15 @@ public class PhysicalUIController : MonoBehaviour
                 (float)mazeGenerator.mazeSideLength * 0.509f  +2.417f),
             new Vector3(3.0f, 1.0f, 3.0f),
             SilentDoNothing);
+        CreateBlock(
+            blueBlockPrefab,
+            "QUIT",
+            new Vector3(
+                (float)mazeGenerator.mazeSideLength * 0.4583f - 6.375f,
+                (float)mazeGenerator.mazeSideLength * 0.888f,
+                (float)mazeGenerator.mazeSideLength * 0.5f - 3.5f),
+            new Vector3(3.0f, 1.0f, 3.0f),
+            OnMainMenu);
         CreateBlock(
             blueBlockPrefab,
             "START",
@@ -345,6 +348,7 @@ public class PhysicalUIController : MonoBehaviour
 
     public void OnMainMenu() {
         mazeGenerator.Destroy();
+        destroyObjects();
         StartMenuState();
     }
 }
